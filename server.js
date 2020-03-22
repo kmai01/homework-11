@@ -19,11 +19,15 @@ app.use(express.json());
 // These routes give our server a "map" of how to respond when users visit or request data from various URLs.
 // ================================================================================
 app.get("/notes", function(req, res) {
-  res.sendFile(path.join(__dirname, "../public/notes.html"));
+  res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
 app.get("*", function(req, res) {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+  res.sendFile(path.join(__dirname, "/public/index.html"));
+});
+
+app.get("/api/notes", function(req, res) {
+  res.sendFile(path.join(__dirname, "/db/db.json"));
 });
 
 
