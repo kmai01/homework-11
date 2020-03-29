@@ -24,22 +24,23 @@ app.use(express.static('public'));
 // These routes give our server a "map" of how to respond when users visit or request data from various URLs.
 // ================================================================================
 app.get("/notes", function(req, res) {
-  res.sendFile(path.join(__dirname , "/public/notes.html"));
+res.sendFile(path.join(__dirname , "/public/notes.html"));
 });
+
+
 
 app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname ,"/public/index.html"));
 });
 
-app.get("/api/notes", function(req, res) {
-  res.sendFile(path.join(__dirname, "/db/db.json"));
-});
 
-app.post("api/notes" , function (req, res) {
 
-var notebody = req.body;
+app.post("/api/notes" , function (req, res) {
 
-db.push(notebody)
+var note = req.body;
+console.log(note)
+
+db.push(note)
 
 fs.writeFile(__dirname + '/db/db.json', JSON.stringify(db), function (err) {
 if (err) {
@@ -49,12 +50,20 @@ if (err) {
     
  })
 
- res.json(notebody)
+ res.json(note)
   
 
 })
+
+app.get("/api/notes", function(req, res) {
+  
+  res.sendFile(path.join(__dirname, "/db/db.json"));
+  
+});
 
 // Listen on port 8080
 app.listen(PORT, function() {
   console.log("App listening on PORT: " + PORT);
 });
+
+
