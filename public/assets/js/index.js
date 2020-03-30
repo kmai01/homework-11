@@ -108,7 +108,7 @@ var renderNoteList = function(notes) {
   $noteList.empty();
 
   var noteListItems = [];
-
+console.log(noteListItems)
   for (var i = 0; i < notes.length; i++) {
     var note = notes[i];
 

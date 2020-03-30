@@ -55,10 +55,30 @@ if (err) {
 
 })
 
+
+
 app.get("/api/notes", function(req, res) {
+  res.json(db)
   
-  res.sendFile(path.join(__dirname, "/db/db.json"));
-  
+ // var notes = req.body;
+// console.log(notes)
+
+
+
+//fs.readFile(__dirname + '/db/db.json', db, function (err) {
+//if (err) {
+ // return console.log(err);
+    //}
+ // console.log("Success1!");
+    
+ //})
+
+ //return res.json(notes)
+});
+
+app.delete("/api/notes/:id", function(req, res) {
+
+
 });
 
 // Listen on port 8080
