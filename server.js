@@ -1,7 +1,7 @@
 var express = require("express");
 var fs = require("fs");
 var path = require("path")
-var db=[] ;
+var db = [];
 
 
 // Tells node that we are creating an "express" server
@@ -23,66 +23,69 @@ app.use(express.static('public'));
 // The below points our server to a series of "route" files.
 // These routes give our server a "map" of how to respond when users visit or request data from various URLs.
 // ================================================================================
-app.get("/notes", function(req, res) {
-res.sendFile(path.join(__dirname , "/public/notes.html"));
+app.get("/notes", function (req, res) {
+  res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
 
 
-app.get("*", function(req, res) {
-  res.sendFile(path.join(__dirname ,"/public/index.html"));
-});
 
 
 
-app.post("/api/notes" , function (req, res) {
 
-var note = req.body;
-console.log(note)
+app.post("/api/notes", function (req, res) {
 
-db.push(note)
+  var note = req.body;
+  console.log(note)
 
-fs.writeFile(__dirname + '/db/db.json', JSON.stringify(db), function (err) {
-if (err) {
-  return console.log(err);
+  db.push(note)
+
+  fs.writeFile(__dirname + '/db/db.json', JSON.stringify(db), function (err) {
+    if (err) {
+      return console.log(err);
     }
-  console.log("Success!");
-    
- })
+    console.log("Success!");
 
- res.json(note)
-  
+  })
+
+  res.json(note)
+
 
 })
 
 
 
-app.get("/api/notes", function(req, res) {
-  res.json(db)
-  
- // var notes = req.body;
-// console.log(notes)
+app.get("/api/notes", function (req, res) {
+
+  var jsondata = {}
+
+  fs.readFile(__dirname + '/db/db.json', 'utf-8', function (err, data) {
+    if (err) {
+      return console.log(err);
+
+    }
+    console.log("Success1!");
+
+
+    jsondata = JSON.parse(data)
+    console.log(jsondata);
+     res.json(jsondata)
+  });
+
+
+  //app.delete("/api/notes/:id", function(req, res) {
+  //const delNotes = req.params.id;
+  //console.log(delNotes)
 
 
 
-//fs.readFile(__dirname + '/db/db.json', db, function (err) {
-//if (err) {
- // return console.log(err);
-    //}
- // console.log("Success1!");
-    
- //})
-
- //return res.json(notes)
 });
-
-app.delete("/api/notes/:id", function(req, res) {
-
-
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // Listen on port 8080
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   console.log("App listening on PORT: " + PORT);
 });
 
