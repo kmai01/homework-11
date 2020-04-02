@@ -1,6 +1,8 @@
 var express = require("express");
 var fs = require("fs");
 var path = require("path")
+
+// Empty array to store note
 var db = [];
 
 
@@ -32,24 +34,35 @@ app.get("/notes", function (req, res) {
 
 
 
+// Function to post note
 
-app.post("/api/notes", function (req, res) {
+ app.post("/api/notes", function (req, res) {
 
   var note = req.body;
-  console.log(note)
-
+  
+  // Push note from body to empty array
   db.push(note)
 
-  fs.writeFile(__dirname + '/db/db.json', JSON.stringify(db), function (err) {
-    if (err) {
-      return console.log(err);
-    }
-    console.log("Success!");
+  // Read array from json file
+  fs.readFile(__dirname +'/db/db.json', function (err, data) {
 
-  })
+    // Parse the read array
+  var json = JSON.parse(data)
+
+  // Push array object or array at index 0 to the read JSON array
+    json.push(db[0])
+
+  // Write it back to json file with added notes
+   fs.writeFile(__dirname + '/db/db.json', JSON.stringify(json), function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Success post message");
+   })
+  
+   })
 
   res.json(note)
-
 
 })
 
@@ -64,7 +77,7 @@ app.get("/api/notes", function (req, res) {
       return console.log(err);
 
     }
-    console.log("Success1!");
+    console.log("Success get note!");
 
 
     jsondata = JSON.parse(data)
@@ -72,14 +85,18 @@ app.get("/api/notes", function (req, res) {
      res.json(jsondata)
   });
 
+});
 
-  //app.delete("/api/notes/:id", function(req, res) {
-  //const delNotes = req.params.id;
-  //console.log(delNotes)
+
+  app.delete("/api/notes/:id", function(req, res) {
+  const delNotes = req.params.id;
+  console.log(delNotes)
 
 
 
 });
+
+
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
