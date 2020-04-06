@@ -47,10 +47,11 @@ app.get("/notes", function (req, res) {
   fs.readFile(__dirname +'/db/db.json', function (err, data) {
 
     // Parse the read array
-  var json = JSON.parse(data)
-
+  let json = JSON.parse(data)
+  
   // Push array object or array at index 0 to the read JSON array
     json.push(db[0])
+    db=[];
 
   // Write it back to json file with added notes
    fs.writeFile(__dirname + '/db/db.json', JSON.stringify(json), function (err) {
@@ -63,6 +64,7 @@ app.get("/notes", function (req, res) {
    })
 
   res.json(note)
+  
 
 })
 
@@ -87,15 +89,38 @@ app.get("/api/notes", function (req, res) {
 
 });
 
+app.delete("/api/notes/:id", function (req, res) {
 
-  app.delete("/api/notes/:id", function(req, res) {
   const delNotes = req.params.id;
-  console.log(delNotes)
+  
+  // Read array from json file
+  fs.readFile(__dirname +'/db/db.json', function (err, data) {
+
+    // Parse the read array
+  let json = JSON.parse(data)
+
+  // Push array object or array at index 0 to the read JSON array
+    json.pop(delNotes)
+    console.log(delNotes)
+
+  // Write it back to json file with added notes
+   fs.writeFile(__dirname + '/db/db.json', JSON.stringify(json), function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Success delete message");
+   })
+  
+   })
+
+  res.json(delNotes)
+  
+
+})
 
 
 
-});
-
+ 
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));

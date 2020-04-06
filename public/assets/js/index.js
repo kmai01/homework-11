@@ -7,6 +7,7 @@ var $noteList = $(".list-container .list-group");
 // activeNote is used to keep track of the note in the textarea
 var activeNote = {};
 
+
 // A function for getting all notes from the db
 var getNotes = function() {
   return $.ajax({
@@ -70,12 +71,14 @@ var handleNoteDelete = function(event) {
   var note = $(this)
     .parent(".list-group-item")
     .data();
-
+    
+  console.log()
   if (activeNote.id === note.id) {
     activeNote = {};
   }
-
+  console.log(note.id);
   deleteNote(note.id).then(function() {
+   
     getAndRenderNotes();
     renderActiveNote();
   });
