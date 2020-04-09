@@ -6,6 +6,7 @@ var path = require("path")
 var db = [];
 
 
+
 // Tells node that we are creating an "express" server
 var app = express();
 
@@ -30,46 +31,6 @@ app.get("/notes", function (req, res) {
 });
 
 
-
-
-
-
-// Function to post note
-
- app.post("/api/notes", function (req, res) {
-
-  var note = req.body;
-  
-  // Push note from body to empty array
-  db.push(note)
-
-  // Read array from json file
-  fs.readFile(__dirname +'/db/db.json', function (err, data) {
-
-    // Parse the read array
-  let json = JSON.parse(data)
-  
-  // Push array object or array at index 0 to the read JSON array
-    json.push(db[0])
-    db=[];
-
-  // Write it back to json file with added notes
-   fs.writeFile(__dirname + '/db/db.json', JSON.stringify(json), function (err) {
-      if (err) {
-        return console.log(err);
-      }
-      console.log("Success post message");
-   })
-  
-   })
-
-  res.json(note)
-  
-
-})
-
-
-
 app.get("/api/notes", function (req, res) {
 
   var jsondata = {}
@@ -84,23 +45,69 @@ app.get("/api/notes", function (req, res) {
 
     jsondata = JSON.parse(data)
     console.log(jsondata);
-     res.json(jsondata)
+    res.json(jsondata)
   });
 
 });
 
+
+
+// Function to post note
+
+app.post("/api/notes", function (req, res) {
+
+  var note = req.body;
+
+  // Push note from body to empty array
+
+
+  // Read array from json file
+  fs.readFile(__dirname + '/db/db.json', function (err, data) {
+
+    // Parse the read array
+    db = JSON.parse(data)
+ 
+    // set lenght to array id
+    note.id=db.length
+
+    // Push new note to array
+    db.push(note);
+
+
+    // Write it back to json file with added notes
+    fs.writeFile(__dirname + '/db/db.json', JSON.stringify(db), function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Success post message");
+    })
+
+  })
+
+  res.json(db)
+
+
+})
+
+
+
 app.delete("/api/notes/:id", function (req, res) {
 
   const delNotes = req.params.id;
-  
+  console.log(delNotes)
   // Read array from json file
   fs.readFile(__dirname +'/db/db.json', function (err, data) {
 
     // Parse the read array
   let json = JSON.parse(data)
 
-  // Push array object or array at index 0 to the read JSON array
-    json.pop(delNotes)
+  
+    //json.splice(delNotes,1)
+
+    json = json.filter(function(note) {
+            return note.id != req.params.id;
+          });
+
     console.log(delNotes)
 
   // Write it back to json file with added notes
@@ -118,9 +125,6 @@ app.delete("/api/notes/:id", function (req, res) {
 
 })
 
-
-
- 
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));

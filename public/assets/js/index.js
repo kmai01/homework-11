@@ -30,7 +30,9 @@ var deleteNote = function(id) {
   return $.ajax({
     url: "api/notes/" + id,
     method: "DELETE"
+    
   });
+
 };
 
 // If there is an activeNote, display it, otherwise render empty inputs
@@ -53,6 +55,7 @@ var renderActiveNote = function() {
 // Get the note data from the inputs, save it to the db and update the view
 var handleNoteSave = function() {
   var newNote = {
+    
     title: $noteTitle.val(),
     text: $noteText.val()
   };
@@ -72,13 +75,13 @@ var handleNoteDelete = function(event) {
     .parent(".list-group-item")
     .data();
     
-  console.log()
+  console.log(note)
   if (activeNote.id === note.id) {
     activeNote = {};
   }
-  console.log(note.id);
+  console.log(note)
   deleteNote(note.id).then(function() {
-   
+    console.log(note.id);
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -111,17 +114,18 @@ var renderNoteList = function(notes) {
   $noteList.empty();
 
   var noteListItems = [];
-console.log(notes)
+   console.log(notes)
   for (var i = 0; i < notes.length; i++) {
     var note = notes[i];
 
     var $li = $("<li class='list-group-item'>").data(note);
     var $span = $("<span>").text(note.title);
+    var $spantext = $("<p>").text(note.text);
     var $delBtn = $(
       "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
     );
 
-    $li.append($span, $delBtn);
+    $li.append($span,$spantext, $delBtn);
     noteListItems.push($li);
   }
 
